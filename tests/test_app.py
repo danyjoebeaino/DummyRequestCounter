@@ -15,9 +15,9 @@ def test_root_returns_200(monkeypatch):
 
     client = TestClient(app_module.app)
     r = client.get("/")
-    assert r.status_code == 200
-    assert "Hello" in r.text
+    assert r.status_code == 200  # nosec
+    assert "Hello" in r.text  # nosec
 
     # call again to ensure the counter increments
     r2 = client.get("/")
-    assert "visited 2" in r2.text
+    assert "visited 2" in r2.text  # nosec
