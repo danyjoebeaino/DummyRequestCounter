@@ -1,4 +1,9 @@
+import sys
 import os
+
+# Add project root to sys.path so "app" can be imported
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import app.app as app_module
 from fastapi.testclient import TestClient
 import fakeredis
@@ -9,13 +14,13 @@ def test_root_returns_200(monkeypatch):
     fake = fakeredis.FakeRedis()
     monkeypatch.setattr(app_module, "redis", fake)
 
-    # optional: ensure app uses predictable env vars for tests
+    # ensure app uses predictable env vars for tests
     os.environ["REDIS_HOST"] = "fake"
     os.environ["REDIS_PORT"] = "6379"
 
     client = TestClient(app_module.app)
     r = client.get("/")
-    assert r.status_code == 200  # nosec
+    assert r.status_code == 200
     assert "Hello" in r.text  # nosec
 
     # call again to ensure the counter increments
